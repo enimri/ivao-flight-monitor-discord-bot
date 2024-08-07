@@ -15,7 +15,7 @@ This Discord bot monitors flights from specified airports using the IVAO API and
 
 - Node.js
 - NPM (Node Package Manager)
-
+  ```
 ## Setup
 
 1. **Clone the repository:**
