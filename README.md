@@ -20,7 +20,9 @@ This Discord bot monitors flights from specified airports using the IVAO API and
 
 1. **Clone the repository:**
 
-   ```bash
+ make a subdomian 
+
+ ```bash
    git clone https://github.com/yourusername/ivao-flight-monitor-bot.git
    cd ivao-flight-monitor-bot
    ```
@@ -45,11 +47,25 @@ This Discord bot monitors flights from specified airports using the IVAO API and
 
    Replace `YOUR_DISCORD_BOT_TOKEN` with your actual Discord bot token and `YOUR_DISCORD_CHANNEL_ID` with your actual Discord channel ID.
 
-4. **Run the bot:**
+4. ** Test Run the bot:**
 
    ```bash
    node bot.js
    ```
+ 
+
+   Run the bot  24/7 
+
+```bash
+go to Node.js 
+Document Root will be  /pilot.yourdivsion.ivao.aero
+Application Root will be  /pilot.xm.ivao.aero
+Application Startup File will be bot.js
+then press +npm install wait until its finish 
+then go to Run Node.js commands
+and prsss and right in blink run start
+  ```
+
 
 ## Configuration
 
