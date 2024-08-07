@@ -9,7 +9,7 @@ This Discord bot monitors flights from specified airports using the IVAO API and
 
 - Monitors departures and arrivals from specified airports.
 - Posts messages to a Discord channel when a relevant departure and arrivals is detected.
-- Messages are styled with embeds and use color coding (green for departures and orange for arrivals).
+- Messages are styled with embeds and use color coding (green for departures and orange for arrivals and if the flight plan where in two mointors aiprort it will blue).
 
 ## Requirements
 
@@ -95,7 +95,7 @@ The bot uses the following key libraries:
 ### Bot Behavior
 
 - The bot sends messages for departures and arrivals from the monitored airports.
-- Messages are sent as embeds with a green color for departures and orange color for arrivals.
+- Messages are sent as embeds with a green color for departures and orange color for arrivals and bule if departure and arrivals in monitored aiports.
 - The bot ensures no duplicate messages are sent by tracking reported departures and arrivals.
 ```
 
