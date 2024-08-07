@@ -3,13 +3,13 @@
 ```markdown
 # IVAO Flight Monitor Discord Bot
 
-This Discord bot monitors flights from specified airports using the IVAO API and posts messages to a Discord channel for departures.
+This Discord bot monitors flights from specified airports using the IVAO API and posts messages to a Discord channel for departures and arrivals.
 
 ## Features
 
-- Monitors departures from specified airports.
-- Posts messages to a Discord channel when a relevant departure is detected.
-- Messages are styled with embeds and use color coding (green for departures).
+- Monitors departures and arrivals from specified airports.
+- Posts messages to a Discord channel when a relevant departure and arrivals is detected.
+- Messages are styled with embeds and use color coding (green for departures and orange for arrivals).
 
 ## Requirements
 
@@ -73,14 +73,14 @@ The bot uses the following key libraries:
 ### Key Functions
 
 - **fetchFlightData:** Fetches flight data from the IVAO API.
-- **parseFlightData:** Parses and filters flight data to extract departures from monitored airports.
-- **monitorFlights:** Checks for new departures and sends messages to the Discord channel.
+- **parseFlightData:** Parses and filters flight data to extract departures and arrivals from monitored airports.
+- **monitorFlights:** Checks for new departures, arrivals and sends messages to the Discord channel.
 
 ### Bot Behavior
 
-- The bot only sends messages for departures from the monitored airports.
-- Messages are sent as embeds with a green color for departures.
-- The bot ensures no duplicate messages are sent by tracking reported departures.
+- The bot sends messages for departures and arrivals from the monitored airports.
+- Messages are sent as embeds with a green color for departures and orange color for arrivals.
+- The bot ensures no duplicate messages are sent by tracking reported departures and arrivals.
 ```
 
 This README provides clear instructions for setting up and running the bot, as well as configuring it to monitor specific airports and handle bot commands.
