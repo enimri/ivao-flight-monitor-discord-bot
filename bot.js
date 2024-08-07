@@ -15,7 +15,7 @@ const MONITORED_AIRPORTS = ['OJAI', 'OJAM', 'OSDI', 'ORBI'];
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
 let lastChecked = new Date();
-let reportedDepartures = new Set();
+let reportedFlights = new Set();
 
 // Fetch flight data from IVAO API
 async function fetchFlightData() {
@@ -30,7 +30,7 @@ async function fetchFlightData() {
     }
 }
 
-// Parse flight data to extract departures
+// Parse flight data to extract departures and arrivals
 function parseFlightData(data) {
     if (!data || !data.clients) {
         console.error('Invalid data structure:', data);
@@ -39,7 +39,7 @@ function parseFlightData(data) {
     const flights = data.clients.pilots || [];
     console.log(`Parsed flight data: ${flights.length} flights`);
     return flights
-        .filter(flight => flight.flightPlan && MONITORED_AIRPORTS.includes(flight.flightPlan.departureId))
+        .filter(flight => flight.flightPlan && (MONITORED_AIRPORTS.includes(flight.flightPlan.departureId) || MONITORED_AIRPORTS.includes(flight.flightPlan.arrivalId)))
         .map(flight => {
             console.log('Flight data structure:', flight);
             return {
@@ -65,10 +65,10 @@ async function monitorFlights() {
 
     flights.forEach(flight => {
         const now = new Date();
-        const departureId = `${flight.callsign}-${flight.departure}`;
+        const flightId = `${flight.callsign}-${flight.departure}-${flight.arrival}`;
 
         // If the flight's departure airport is monitored and it's a new departure
-        if (MONITORED_AIRPORTS.includes(flight.departure) && now > lastChecked && !reportedDepartures.has(departureId)) {
+        if (MONITORED_AIRPORTS.includes(flight.departure) && now > lastChecked && !reportedFlights.has(flightId)) {
             console.log(`Sending departure message for flight ${flight.callsign} from ${flight.departure}`);
             const embed = new EmbedBuilder()
                 .setColor(0x00FF00) // Green color for departure
@@ -78,9 +78,25 @@ async function monitorFlights() {
             client.channels.cache.get(CHANNEL_ID).send({ embeds: [embed] })
                 .then(() => {
                     console.log('Departure message sent');
-                    reportedDepartures.add(departureId);
+                    reportedFlights.add(flightId);
                 })
                 .catch(err => console.error('Error sending departure message:', err));
+        }
+
+        // If the flight's arrival airport is monitored, it's a new arrival, and no departure message has been sent
+        if (MONITORED_AIRPORTS.includes(flight.arrival) && now > lastChecked && !reportedFlights.has(flightId)) {
+            console.log(`Sending arrival message for flight ${flight.callsign} at ${flight.arrival}`);
+            const embed = new EmbedBuilder()
+                .setColor(0xFFA500) // Orange color for arrival
+                .setTitle('Arrival')
+                .setDescription(`ID: ${flight.userId}, Departure: ${flight.departure}, Arrival: ${flight.arrival}, Callsign: ${flight.callsign}.`);
+
+            client.channels.cache.get(CHANNEL_ID).send({ embeds: [embed] })
+                .then(() => {
+                    console.log('Arrival message sent');
+                    reportedFlights.add(flightId);
+                })
+                .catch(err => console.error('Error sending arrival message:', err));
         }
     });
 
