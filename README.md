@@ -20,7 +20,7 @@ This Discord bot monitors flights from specified airports using the IVAO API and
 
 1. **Clone the repository:**
 
- make a subdomian 
+ make a subdomian pilot.yourdivsion.ivao.aero
 
  ```bash
    git clone https://github.com/yourusername/ivao-flight-monitor-bot.git
