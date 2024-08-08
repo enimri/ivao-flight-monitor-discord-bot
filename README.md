@@ -1,88 +1,113 @@
-### README.md
+Here's a `README.md` file for your project. This file provides clear instructions on how to set up and run your Discord bot on a Plesk server.
 
 ```markdown
-# IVAO Flight Monitor Discord Bot
+# Discord Flight Monitoring Bot
 
-This Discord bot monitors flights from specified airports using the IVAO API and posts messages to a Discord channel for departures and arrivals.
+This Discord bot monitors flights from specific airports and posts updates to a designated channel. It uses the IVAO API to fetch flight data and posts updates for departures and arrivals.
 
 ## Features
 
-- Monitors departures and arrivals from specified airports.
-- Posts messages to a Discord channel when a relevant departure and arrivals is detected.
-- Messages are styled with embeds and use color coding (green for departures and orange for arrivals and if the flight plan where in two mointors aiprort it will blue).
+- Monitors flights from a set of predefined airports.
+- Sends updates to a specific Discord channel for flight departures and arrivals.
+- Uses `cron` to schedule flight checks every minute.
+- Utilizes `pm2` to keep the bot running continuously.
 
-## Requirements
+## Prerequisites
 
-- Node.js
-- NPM (Node Package Manager)
-  ```
-## Setup
+- Node.js installed on your Plesk server.
+- A Discord bot token.
+- Access to your Plesk server (via Plesk dashboard or SSH).
 
-1. **Clone the repository:**
+## Installation
 
- make a subdomian pilot.yourdivsion.ivao.aero
+### Step 1: Set Up Node.js on Plesk
 
- ```bash
-   git clone https://github.com/yourusername/ivao-flight-monitor-bot.git
-   cd ivao-flight-monitor-bot
-   ```
+1. **Install Node.js**:
+   - Go to **Tools & Settings** in the Plesk dashboard.
+   - Click on **Updates and Upgrades**.
+   - Click on **Add/Remove Components**.
+   - Find **Node.js** and install it.
 
-2. **Install dependencies:**
+2. **Create a Node.js Application**:
+   - Go to **Websites & Domains** and select the domain where you want to host your bot.
+   - Click on **Node.js** and then click on **Enable Node.js**.
 
-   ```bash
-   npm install
-   ```
+### Step 2: Upload Your Bot Files
 
-3. **Configure the bot:**
+1. **Upload `bot.js` and `package.json`**:
+   - Navigate to **Files** in the Plesk dashboard.
+   - Go to your domain's directory (usually under `httpdocs`).
+   - Upload `bot.js` and `package.json` files to this directory.
 
-   Open the `bot.js` file and update the following lines with your Discord bot token and channel ID:
+### Step 3: Install Dependencies
 
-   ```javascript
-   // Your Discord Bot Token
-   const TOKEN = 'YOUR_DISCORD_BOT_TOKEN';
+1. **Open a Terminal in Plesk**:
+   - Navigate to your domain in the Plesk dashboard.
+   - Click on **Web Hosting Access** to get the SSH credentials (if not already available).
+   - Use an SSH client (like PuTTY) to connect to your server, or use the **Web SSH** option in Plesk.
 
-   // Your Discord Channel ID
-   const CHANNEL_ID = 'YOUR_DISCORD_CHANNEL_ID';
-   ```
+2. **Install Dependencies**:
+   - Navigate to your domain's directory where you uploaded your files. For example:
+     ```sh
+     cd /var/www/vhosts/yourdomain.com/httpdocs
+     ```
+   - Run the following command to install the required dependencies:
+     ```sh
+     npm install
+     ```
 
-   Replace `YOUR_DISCORD_BOT_TOKEN` with your actual Discord bot token and `YOUR_DISCORD_CHANNEL_ID` with your actual Discord channel ID.
+### Step 4: Configure `bot.js`
 
-4. **Run the bot:**
+1. **Modify `bot.js`**:
+   - Open the `bot.js` file in a text editor.
+   - Replace `const TOKEN = process.env.DISCORD_TOKEN;` with `const TOKEN = 'your-discord-bot-token';`.
+   - Replace `const CHANNEL_ID = '1270049435652722741';` with your actual Discord channel ID.
 
-   ```bash
-   node bot.js
-   ```
+### Step 5: Set Up a Process Manager
 
-## Configuration
+To ensure your bot runs continuously, even after reboots, use a process manager like `pm2`.
 
-- **Monitored Airports:** You can modify the list of monitored airports by editing the `MONITORED_AIRPORTS` array in the `bot.js` file.
+1. **Install `pm2` Globally**:
+   - In your SSH terminal, run the following command:
+     ```sh
+     npm install -g pm2
+     ```
 
-  ```javascript
-  const MONITORED_AIRPORTS = ['OJAI', 'OJAM', 'OSDI', 'ORBI'];
-  ```
+2. **Start Your Bot with `pm2`**:
+   - Navigate to your bot's directory if not already there.
+   - Start your bot with `pm2`:
+     ```sh
+     pm2 start bot.js
+     ```
 
-## Commands
+3. **Save the `pm2` Process List and Enable Startup Script**:
+   - Save the process list so `pm2` can automatically start your bot on server reboots:
+     ```sh
+     pm2 save
+     ```
+   - Set up the startup script to run `pm2` on server boot:
+     ```sh
+     pm2 startup
+     ```
+   - Follow the instructions provided by `pm2` to complete the setup. This usually involves running a command that `pm2` outputs.
 
-- **!flights:** Get a list of currently monitored flights.
+## Usage
 
-## Code Explanation
+1. **Start the Bot**:
+   - If not already started, navigate to your bot's directory and start the bot using `pm2`:
+     ```sh
+     pm2 start bot.js
+     ```
 
-The bot uses the following key libraries:
-- **discord.js:** For interacting with the Discord API.
-- **axios:** For making HTTP requests to the IVAO API.
-- **node-cron:** For scheduling the flight monitoring to run every 1 minute.
+2. **Monitor Flights**:
+   - The bot will automatically monitor flights from the specified airports and send updates to the designated Discord channel.
 
-### Key Functions
+3. **Commands**:
+   - Use `!flights` in the designated Discord channel to get the current monitored flights.
 
-- **fetchFlightData:** Fetches flight data from the IVAO API.
-- **parseFlightData:** Parses and filters flight data to extract departures and arrivals from monitored airports.
-- **monitorFlights:** Checks for new departures, arrivals and sends messages to the Discord channel.
+## License
 
-### Bot Behavior
-
-- The bot sends messages for departures and arrivals from the monitored airports.
-- Messages are sent as embeds with a green color for departures and orange color for arrivals and bule if departure and arrivals in monitored aiports.
-- The bot ensures no duplicate messages are sent by tracking reported departures and arrivals.
+This project is licensed under the MIT License.
 ```
 
-This README provides clear instructions for setting up and running the bot, as well as configuring it to monitor specific airports and handle bot commands.
+Make sure to replace `'your-discord-bot-token'` with your actual Discord bot token and `yourdomain.com` with your actual domain name. Save this content as `README.md` in your project directory. This will provide clear instructions for anyone who wants to set up and run the bot.
