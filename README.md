@@ -4,10 +4,10 @@ This Discord bot monitors flights from specific airports and posts updates to a 
 
 ## Features
 
-- Monitors flights from a set of predefined airports.
-- Sends updates to a specific Discord channel for flight departures and arrivals.
-- Uses `cron` to schedule flight checks every minute.
-- Utilizes `pm2` to keep the bot running continuously.
+- **Monitors Flights**: Tracks flights from predefined airports.
+- **Sends Notifications**: Posts updates to a specific Discord channel for flight departures and arrivals.
+- **Scheduled Checks**: Uses `cron` to schedule flight checks every minute.
+- **Continuous Operation**: Utilizes `pm2` to keep the bot running continuously.
 
 ## Prerequisites
 
@@ -101,3 +101,15 @@ To ensure your bot runs continuously, even after reboots, use a process manager 
 
 3. **Commands**:
    - Use `!flights` in the designated Discord channel to get the current monitored flights.
+
+## Bot Behavior
+
+- **Monitoring**: The bot checks for flights every minute using a `cron` job.
+- **Flight Notifications**: Sends notifications for departures and arrivals from/to monitored airports.
+  - **Departure Notifications**: Embed color is green (`#00FF00`).
+  - **Arrival Notifications**: Embed color is orange (`#FFA500`).
+- **Auto-Deletion**: Deletes the messages after 24 hours to keep the channel clean.
+
+## License
+
+This project is licensed under the MIT License.
