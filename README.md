@@ -57,8 +57,8 @@ This Discord bot monitors flights from specific airports and posts updates to a 
 
 1. **Modify `bot.js`**:
    - Open the `bot.js` file in a text editor.
-   - Replace `const TOKEN = process.env.DISCORD_TOKEN;` with `const TOKEN = 'your-discord-bot-token';`.
-   - Replace `const CHANNEL_ID = '1270049435652722741';` with your actual Discord channel ID.
+   - Replace `TOKEN = YOUR_DISCORD_TOKEN;` with  TOKEN = 'your-discord-bot-token';`.
+   - Replace `CHANNEL_ID = '1270049435652722741';` with your actual Discord channel ID.
 
 ### Step 5: Set Up a Process Manager
 
