@@ -59,6 +59,7 @@ This Discord bot monitors flights from specific airports and posts updates to a 
    - Open the `bot.js` file in a text editor.
    - Replace `TOKEN = YOUR_DISCORD_TOKEN;` with  TOKEN = 'your-discord-bot-token';`.
    - Replace `CHANNEL_ID = '1270049435652722741';` with your actual Discord channel ID.
+   - Replace  `MONITORED_AIRPORTS = ['OJAI', 'OJAM', 'OSDI', 'ORBI']; with Desire airport you want to monitor
 
 ### Step 5: Set Up a Process Manager
 
