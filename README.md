@@ -1,5 +1,3 @@
-Here's a `README.md` file for your project. This file provides clear instructions on how to set up and run your Discord bot on a Plesk server.
-
 ```markdown
 # Discord Flight Monitoring Bot
 
@@ -109,5 +107,3 @@ To ensure your bot runs continuously, even after reboots, use a process manager 
 
 This project is licensed under the MIT License.
 ```
-
-Make sure to replace `'your-discord-bot-token'` with your actual Discord bot token and `yourdomain.com` with your actual domain name. Save this content as `README.md` in your project directory. This will provide clear instructions for anyone who wants to set up and run the bot.
