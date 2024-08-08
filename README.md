@@ -1,4 +1,3 @@
-```markdown
 # Discord Flight Monitoring Bot
 
 This Discord bot monitors flights from specific airports and posts updates to a designated channel. It uses the IVAO API to fetch flight data and posts updates for departures and arrivals.
