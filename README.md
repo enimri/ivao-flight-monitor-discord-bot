@@ -101,8 +101,3 @@ To ensure your bot runs continuously, even after reboots, use a process manager 
 
 3. **Commands**:
    - Use `!flights` in the designated Discord channel to get the current monitored flights.
-
-## License
-
-This project is licensed under the MIT License.
-```
