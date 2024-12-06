@@ -20,7 +20,7 @@ go to discord Developer and make a bot
 
 bot must have : bot ,view channels ,  send messages ,  embed links ,  read message history
 
- After editing Code go SSH and CD atc.yourdivison.ivao.aero
+ After editing Code go SSH and CD pilot.yourdivison.ivao.aero
  then run 
 ```
 test code 
