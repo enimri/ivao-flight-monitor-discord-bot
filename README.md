@@ -13,8 +13,8 @@ go to discord Developer and make a bot
 
 ```bash
 {
-    "token": "<Bot Token>",
-    "channel": "<Channel ID>",
+    "token": "<Bot Token>", will find it in .env
+    "channel": "<Channel ID>", will find it in .env
     "airport_prefixes": ["OJAI", "OSDI",] #CHANGE DESIRE AIRPORT ONLY PUT THE ICAO OF THE AIRPORT
 }
 
