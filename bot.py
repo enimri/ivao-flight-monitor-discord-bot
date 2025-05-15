@@ -3,6 +3,7 @@ import aiohttp
 import asyncio
 import logging
 import os
+import csv
 import datetime
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
@@ -12,18 +13,33 @@ load_dotenv()
 TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 CHANNEL_ID = int(os.getenv("DISCORD_CHANNEL_ID"))
 
+# Load ICAO flag + airport name mapping
+def load_icao_metadata(csv_file):
+    def to_flag(code):
+        return chr(ord(code[0]) + 127397) + chr(ord(code[1]) + 127397)
+
+    mapping = {}
+    try:
+        with open(csv_file, newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                icao = row.get('icao')
+                country_code = row.get('country_code')
+                airport_name = row.get('airport')
+                if icao and country_code and airport_name and len(country_code) == 2:
+                    flag = to_flag(country_code.strip().upper())
+                    mapping[icao.strip().upper()] = f"{flag} {icao.strip().upper()} - {airport_name.strip()}"
+    except Exception as e:
+        logging.error(f"Failed to load ICAO metadata: {e}")
+    return mapping
+
+ICAO_METADATA = load_icao_metadata("iata-icao.csv")
+
 # Monitored Airports
 MONITORED_AIRPORTS = [
     "OSDI", "OSAP", "OSDZ", "OSLK", "ORBI", "ORAA", "ORMM", 
     "ORSU", "OJAI", "OJAM", "OJAQ", "OSKL", "ORNI"
 ]
-
-# Map ICAO to country flag emoji
-AIRPORT_FLAGS = {
-    "OSDI": "🇸🇾", "OSAP": "🇸🇾", "OSDZ": "🇸🇾", "OSLK": "🇸🇾", "OSKL": "🇸🇾",
-    "ORBI": "🇮🇶", "ORAA": "🇮🇶", "ORMM": "🇮🇶", "ORSU": "🇮🇶", "ORNI": "🇮🇶",
-    "OJAI": "🇯🇴", "OJAM": "🇯🇴", "OJAQ": "🇯🇴"
-}
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -45,8 +61,8 @@ async def fetch_flight_data():
         logging.error(f"Error fetching flight data: {e}")
     return None
 
-def get_flag(icao_code):
-    return AIRPORT_FLAGS.get(icao_code, "")
+def get_airport_display(icao_code):
+    return ICAO_METADATA.get(icao_code, f"{icao_code or 'N/A'}")
 
 def parse_flight_data(data):
     if not data or "clients" not in data or "pilots" not in data["clients"]:
@@ -78,12 +94,8 @@ def build_flight_embed(flight, mode="Update"):
         timestamp=datetime.datetime.utcnow()
     )
     embed.add_field(name="✈️ Callsign", value=flight['callsign'], inline=True)
-
-    dep_flag = get_flag(flight.get("departure"))
-    arr_flag = get_flag(flight.get("arrival"))
-
-    embed.add_field(name="🛫 Departure", value=f"{flight.get('departure') or 'N/A'} {dep_flag}", inline=True)
-    embed.add_field(name="🛬 Arrival", value=f"{flight.get('arrival') or 'N/A'} {arr_flag}", inline=True)
+    embed.add_field(name="🛫 Departure", value=get_airport_display(flight.get("departure")), inline=True)
+    embed.add_field(name="🛬 Arrival", value=get_airport_display(flight.get("arrival")), inline=True)
     embed.add_field(name="🛩 Aircraft", value=flight.get('aircraft') or "N/A", inline=True)
 
     cruise = flight.get('cruise')
