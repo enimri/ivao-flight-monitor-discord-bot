@@ -27,11 +27,11 @@ test code
 
 Linux
 ```bash
-  python3 discord_bot.py
+  python3 bot.py
 ```
 if everything works use this code to keep the bot online
 ```bash
-  screen -dmS bot-name python3.9 discord_bot.py
+  screen -dmS bot-name python3.9 bot.py
 ```
 ## Bot Behavior
 
