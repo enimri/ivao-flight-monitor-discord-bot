@@ -5,6 +5,7 @@ import logging
 import os
 import csv
 import datetime
+import time
 from discord.ext import commands, tasks
 from dotenv import load_dotenv
 
@@ -48,7 +49,8 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-reported_flights = set()
+# Flight report tracking with timestamp
+reported_flights = {}  # flight_id -> timestamp
 
 async def fetch_flight_data():
     url = "https://api.ivao.aero/v2/tracker/whazzup"
@@ -122,14 +124,17 @@ async def monitor_flights():
 
     for flight in flights:
         flight_id = f"{flight['userId']}-{flight['callsign']}"
-        if flight_id in reported_flights:
+        now = time.time()
+
+        # Skip if already reported in the last 3 hours (10800 seconds)
+        if flight_id in reported_flights and now - reported_flights[flight_id] < 10800:
             continue
 
         embed = build_flight_embed(flight)
         channel = bot.get_channel(CHANNEL_ID)
         if channel:
             await channel.send(embed=embed)
-            reported_flights.add(flight_id)
+            reported_flights[flight_id] = now
             logging.info(f"Reported flight: {flight_id}")
 
 @bot.command(name="checkflights")
@@ -159,9 +164,15 @@ async def on_ready():
 async def flight_monitoring():
     await monitor_flights()
 
-@tasks.loop(hours=3)
+@tasks.loop(minutes=10)
 async def clear_reported_flights():
-    reported_flights.clear()
-    logging.info("Cleared reported_flights cache.")
+    now = time.time()
+    expired = [fid for fid, ts in reported_flights.items() if now - ts > 10800]
+
+    for fid in expired:
+        del reported_flights[fid]
+
+    if expired:
+        logging.info(f"Cleaned up {len(expired)} expired reported flights.")
 
 bot.run(TOKEN)
